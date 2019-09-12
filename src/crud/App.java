@@ -25,6 +25,7 @@ public class App {
         
         declaracao.execute("CREATE TABLE if not exists CIDADE(ID INT NOT NULL IDENTITY, NOME VARCHAR(255) NOT NULL UNIQUE, IDESTADO INTEGER NOT NULL);");
         
+        declaracao.execute("CREATE TABLE if not exists PESSOA(ID INT NOT NULL IDENTITY, NOME VARCHAR(255) NOT NULL UNIQUE, RG VARCHAR(255), CPF VARCHAR(255) IDCIDADE INTEGER);");
         //declaracao.execute("ALTER TABLE CIDADE ADD FOREIGN KEY (IDESTADO) REFERENCES ESTADO(ID)");
         
         conexao.close();

@@ -116,8 +116,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_itemMenuSobreActionPerformed
 
     private void itemMenuPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuPessoaActionPerformed
-        //Seu código aqui
-        JOptionPane.showMessageDialog(rootPane, "Implementar");
+        CadastroPessoa cadastroPessoa = new CadastroPessoa();
+        cadastroPessoa.setLocationRelativeTo(null);
+        cadastroPessoa.setVisible(true);
+        cadastroPessoa.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     }//GEN-LAST:event_itemMenuPessoaActionPerformed
 
     /**
