@@ -26,37 +26,38 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="labelCpf" min="-2" max="-2" attributes="0"/>
-                          <Component id="labelRg" min="-2" max="-2" attributes="0"/>
-                          <Component id="labelNome" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="campoNome" min="-2" pref="331" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="campoRg" min="-2" pref="248" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="campoCpf" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
+                  <Component id="jScrollPane1" alignment="0" pref="402" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="botaoIncluir" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                              <Component id="labelCidade" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="labelFone" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelCpf" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelRg" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelNome" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelEndereco" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelBairro" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelCidade" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelNumero" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="comboCidades" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="campoNome" pref="235" max="32767" attributes="0"/>
+                                      <Component id="campoFone" min="-2" pref="145" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="campoRg" alignment="0" pref="145" max="32767" attributes="0"/>
+                                          <Component id="campoCpf" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Component id="campoEndereco" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="comboCidades" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="campoNumero" alignment="0" pref="144" max="32767" attributes="0"/>
+                                      <Component id="campoBairro" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -80,16 +81,36 @@
                   <Component id="campoRg" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelCpf" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="campoCpf" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="labelCpf" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoCpf" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="labelFone" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoFone" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="campoEndereco" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelEndereco" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelBairro" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoBairro" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelNumero" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoNumero" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="labelCidade" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="comboCidades" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="112" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="botaoIncluir" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="172" max="-2" attributes="0"/>
@@ -124,9 +145,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="RG:"/>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="RG:"/>
-      </AccessibilityProperties>
     </Component>
     <Component class="javax.swing.JButton" name="botaoIncluir">
       <Properties>
@@ -155,9 +173,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Cidade:"/>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Cidade:"/>
-      </AccessibilityProperties>
     </Component>
     <Component class="javax.swing.JComboBox" name="comboCidades">
       <Properties>
@@ -173,6 +188,37 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelFone">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Telefone:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campoFone">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="campoFoneActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campoEndereco">
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelEndereco">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Endere&#xe7;o:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelBairro">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Bairro:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campoBairro">
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelNumero">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Numero"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campoNumero">
     </Component>
   </SubComponents>
 </Form>
