@@ -11,7 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -25,7 +28,8 @@ public class CadastroCidade extends javax.swing.JFrame {
     public CadastroCidade() {
         initComponents();
         preencherComboEstados();
-        atualizarListaCidades();
+        montaTabela();
+        //atualizarListaCidades();
     }
 
     /**
@@ -39,18 +43,19 @@ public class CadastroCidade extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         campoNome = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        painelCidades = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
         comboEstado = new javax.swing.JComboBox<>();
         botaoIncluir = new javax.swing.JButton();
+        botaoAlterar = new javax.swing.JButton();
+        botaoConsultar = new javax.swing.JButton();
+        botaoExcluir = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabela = new javax.swing.JTable();
+        campoConsultar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Nome:");
-
-        painelCidades.setEditable(false);
-        jScrollPane1.setViewportView(painelCidades);
 
         jLabel2.setText("Estado:");
 
@@ -61,28 +66,78 @@ public class CadastroCidade extends javax.swing.JFrame {
             }
         });
 
+        botaoAlterar.setText("Alterar");
+        botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAlterarActionPerformed(evt);
+            }
+        });
+
+        botaoConsultar.setText("Consultar");
+        botaoConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConsultarActionPerformed(evt);
+            }
+        });
+
+        botaoExcluir.setText("Excluir");
+        botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoExcluirActionPerformed(evt);
+            }
+        });
+
+        tabela.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tabela);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(comboEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(8, 8, 8)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botaoIncluir))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(comboEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(botaoIncluir)
+                        .addGap(18, 18, 18)
+                        .addComponent(botaoAlterar)
+                        .addGap(18, 18, 18)
+                        .addComponent(botaoExcluir)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(botaoConsultar)
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,30 +150,136 @@ public class CadastroCidade extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(comboEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botaoIncluir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoAlterar)
+                    .addComponent(botaoExcluir)
+                    .addComponent(botaoIncluir))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoConsultar)
+                    .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
-        Connection conexao = Banco.abrirConexao();
-        try {
-            PreparedStatement comando = conexao.prepareStatement("insert into cidade (nome, idestado) values (?, ?)");
-            comando.setString(1, campoNome.getText());
-            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
-            comando.executeUpdate();
-            comando.close();
-            conexao.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
+        if (validaCampos()) {
+            Connection conexao = Banco.abrirConexao();
+            try {
+                PreparedStatement comando = conexao.prepareStatement("insert into cidade (nome, idestado) values (?, ?)");
+                comando.setString(1, campoNome.getText());
+                comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
+                comando.executeUpdate();
+                comando.close();
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex);
+            }
+            montaTabela();
+            limpaCampos();
         }
-        atualizarListaCidades();
     }//GEN-LAST:event_botaoIncluirActionPerformed
+
+    private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
+
+//        Connection conexao = Banco.abrirConexao();
+//        try {
+//            PreparedStatement comando = conexao.prepareStatement("update cidade set nome = ?, idestado = ? where id =");
+//            comando.setString(1, campoNome.getText());
+//            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
+//            comando.executeUpdate();
+//            comando.close();
+//            conexao.close();
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(rootPane, ex);
+//        }
+//        montaTabela();
+    }//GEN-LAST:event_botaoAlterarActionPerformed
+
+    private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Cidade");
+
+        try {
+            String parte = campoConsultar.getText();
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade where nome like '%" + parte + "%'");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
+            }
+            tabela.setModel(modelo);
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botaoConsultarActionPerformed
+
+    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+        Object[] opcoes = {"Sim", "Não"};
+        int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir "
+                + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        if (i == JOptionPane.YES_OPTION) {
+            int indice = tabela.getSelectedRow();
+            try {
+                Connection conn = Banco.abrirConexao();
+                PreparedStatement ps = conn.prepareStatement("delete from cidade where id=" + indice);
+                ps.executeUpdate();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            montaTabela();
+
+        }
+    }//GEN-LAST:event_botaoExcluirActionPerformed
+
+    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        try {
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps;
+            int indice = tabela.getSelectedRow();
+            ps = conn.prepareStatement("select * from cidade where id=" + indice);
+
+            ResultSet rs = ps.executeQuery();
+
+            campoNome.setText(rs.getString("nome"));
+            //comboEstado.addItem(rs.getString("estado"));
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_tabelaMouseClicked
+
+    public void montaTabela() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Cidade");
+
+        try {
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
+            }
+            tabela.setModel(modelo);
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -156,49 +317,58 @@ public class CadastroCidade extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botaoAlterar;
+    private javax.swing.JButton botaoConsultar;
+    private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoIncluir;
+    private javax.swing.JTextField campoConsultar;
     private javax.swing.JTextField campoNome;
     private javax.swing.JComboBox<String> comboEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextPane painelCidades;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables
 
     ArrayList<Integer> idEstados = new ArrayList<>();
-    
-    private void atualizarListaCidades() {
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade");
-            ResultSet rs = ps.executeQuery();            
-            String cidades = "";
-            while (rs.next()) {
-                cidades += rs.getInt("id") + " - ";                
-                cidades += rs.getString("nome") + "\n";
-            }
-            painelCidades.setText(cidades);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void preencherComboEstados() {
         try {
             Connection conn = Banco.abrirConexao();
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 idEstados.add(rs.getInt("id"));
                 comboEstado.addItem(rs.getString("nome"));
             }
-            
+
             ps.close();
             conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void limpaCampos() {
+        campoNome.setText("");
+    }
+
+    private Boolean validaCampos() {
+        String mensagem = "";
+        Boolean retorno = true;
+        if (campoNome.getText().equals("")) {
+            mensagem = mensagem + "O campo nome é obrigatório!\n";
+            retorno = false;
+        }
+        if (comboEstado.getSelectedItem() == null) {
+            mensagem = mensagem + "O campo estado é obrigatório!\n";
+            retorno = false;
+        }
+        if (retorno == false) {
+            JOptionPane.showMessageDialog(null, mensagem);
+        }
+        return retorno;
     }
 }

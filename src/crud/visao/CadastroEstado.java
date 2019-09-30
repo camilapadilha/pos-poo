@@ -10,7 +10,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -23,7 +26,7 @@ public class CadastroEstado extends javax.swing.JFrame {
      */
     public CadastroEstado() {
         initComponents();
-        atualizarListaEstados();
+        montaTabela();
     }
 
     /**
@@ -40,8 +43,12 @@ public class CadastroEstado extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         campoSigla = new javax.swing.JTextField();
         botaoIncluir = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        painelEstados = new javax.swing.JTextPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabela = new javax.swing.JTable();
+        botaoAlterar = new javax.swing.JButton();
+        botaoExcluir = new javax.swing.JButton();
+        botaoConsultar = new javax.swing.JButton();
+        campoConsultar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,8 +63,39 @@ public class CadastroEstado extends javax.swing.JFrame {
             }
         });
 
-        painelEstados.setEditable(false);
-        jScrollPane1.setViewportView(painelEstados);
+        tabela.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tabela);
+
+        botaoAlterar.setText("Alterar");
+        botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAlterarActionPerformed(evt);
+            }
+        });
+
+        botaoExcluir.setText("Excluir");
+        botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoExcluirActionPerformed(evt);
+            }
+        });
+
+        botaoConsultar.setText("Consultar");
+        botaoConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConsultarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -66,21 +104,32 @@ public class CadastroEstado extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(campoNome))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botaoIncluir)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(botaoIncluir)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoAlterar)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoExcluir))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoSigla, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 244, Short.MAX_VALUE)))
+                                .addComponent(campoSigla, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 5, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(botaoConsultar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,30 +142,107 @@ public class CadastroEstado extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(campoSigla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(botaoIncluir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoIncluir)
+                    .addComponent(botaoAlterar)
+                    .addComponent(botaoExcluir))
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoConsultar))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
-        Connection conexao = Banco.abrirConexao();
-        try {
-            PreparedStatement comando = conexao.prepareStatement("insert into estado (sigla, nome) values (?, ?)");
-            comando.setString(1, campoSigla.getText());
-            comando.setString(2, campoNome.getText());
-            comando.executeUpdate();
-            comando.close();
-            conexao.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
+        if (validaCampos()) {
+            Connection conexao = Banco.abrirConexao();
+            try {
+                PreparedStatement comando = conexao.prepareStatement("insert into estado (sigla, nome) values (?, ?)");
+                comando.setString(1, campoSigla.getText());
+                comando.setString(2, campoNome.getText());
+                comando.executeUpdate();
+                comando.close();
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex);
+            }
+            montaTabela();
+            limpaCampos();
         }
-        atualizarListaEstados();
     }//GEN-LAST:event_botaoIncluirActionPerformed
+
+    private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botaoAlterarActionPerformed
+
+    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+        Object[] opcoes = {"Sim", "Não"};
+        int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir "
+                + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        if (i == JOptionPane.YES_OPTION) {
+            int indice = tabela.getSelectedRow();
+            System.out.println(indice);
+            try {
+                Connection conn = Banco.abrirConexao();
+                PreparedStatement ps = conn.prepareStatement("delete from estado where id=" + indice);
+                ps.executeUpdate();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            montaTabela();
+
+        }
+    }//GEN-LAST:event_botaoExcluirActionPerformed
+
+    private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Estado");
+
+        try {
+            String parte = campoConsultar.getText();
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado where nome like '%" + parte + "%'");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
+            }
+            tabela.setModel(modelo);
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botaoConsultarActionPerformed
+    public void montaTabela() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Estado");
+
+        try {
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
+            }
+            tabela.setModel(modelo);
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -154,29 +280,38 @@ public class CadastroEstado extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botaoAlterar;
+    private javax.swing.JButton botaoConsultar;
+    private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoIncluir;
+    private javax.swing.JTextField campoConsultar;
     private javax.swing.JTextField campoNome;
     private javax.swing.JTextField campoSigla;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextPane painelEstados;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables
 
-    private void atualizarListaEstados() {
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
-            ResultSet rs = ps.executeQuery();            
-            String estados = "";
-            while (rs.next()) {
-                estados += rs.getInt("id") + " - ";
-                estados += rs.getString("sigla") + " - ";
-                estados += rs.getString("nome") + "\n";
-            }
-            painelEstados.setText(estados);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void limpaCampos() {
+        campoNome.setText("");
+        campoSigla.setText("");
+    }
+
+    private Boolean validaCampos() {
+        String mensagem = "";
+        Boolean retorno = true;
+        if (campoNome.getText().equals("")) {
+            mensagem = mensagem + "O campo Nome é obrigatório!\n";
+            retorno = false;
         }
+        if (campoSigla.getText().equals("")) {
+            mensagem = mensagem + "O campo Sigla é obrigatório!\n";
+            retorno = false;
+        }
+        if (retorno == false) {
+            JOptionPane.showMessageDialog(null, mensagem);
+        }
+        return retorno;
     }
 }
