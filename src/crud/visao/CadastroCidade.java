@@ -187,18 +187,21 @@ public class CadastroCidade extends javax.swing.JFrame {
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
 
-//        Connection conexao = Banco.abrirConexao();
-//        try {
-//            PreparedStatement comando = conexao.prepareStatement("update cidade set nome = ?, idestado = ? where id =");
-//            comando.setString(1, campoNome.getText());
-//            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
-//            comando.executeUpdate();
-//            comando.close();
-//            conexao.close();
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(rootPane, ex);
-//        }
-//        montaTabela();
+        Connection conexao = Banco.abrirConexao();
+        try {
+            int posicao = tabela.getSelectedRow();
+            int id = (int) tabela.getValueAt(posicao, 0);
+            PreparedStatement comando = conexao.prepareStatement("update cidade set nome = ?, idestado = ? where id ="+id);
+            comando.setString(1, campoNome.getText());
+            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
+            comando.executeUpdate();
+            comando.close();
+            conexao.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex);
+        }
+        montaTabela();
+        limpaCampos();
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
@@ -229,10 +232,11 @@ public class CadastroCidade extends javax.swing.JFrame {
                 + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
         if (i == JOptionPane.YES_OPTION) {
-            int indice = tabela.getSelectedRow();
+            int posicao = tabela.getSelectedRow();
+            int id = (int) tabela.getValueAt(posicao, 0);
             try {
                 Connection conn = Banco.abrirConexao();
-                PreparedStatement ps = conn.prepareStatement("delete from cidade where id=" + indice);
+                PreparedStatement ps = conn.prepareStatement("delete from cidade where id=" + id);
                 ps.executeUpdate();
                 conn.close();
             } catch (SQLException ex) {
@@ -244,20 +248,16 @@ public class CadastroCidade extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        Connection conn = Banco.abrirConexao();
+        PreparedStatement ps;
+        int posicao = tabela.getSelectedRow();
+        String nome = (String) tabela.getValueAt(posicao, 1);
+        campoNome.setText(nome);
         try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps;
-            int indice = tabela.getSelectedRow();
-            ps = conn.prepareStatement("select * from cidade where id=" + indice);
-
-            ResultSet rs = ps.executeQuery();
-
-            campoNome.setText(rs.getString("nome"));
-            //comboEstado.addItem(rs.getString("estado"));
+            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_tabelaMouseClicked
 
     public void montaTabela() {

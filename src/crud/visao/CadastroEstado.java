@@ -74,6 +74,11 @@ public class CadastroEstado extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabela);
 
         botaoAlterar.setText("Alterar");
@@ -178,7 +183,21 @@ public class CadastroEstado extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
-        // TODO add your handling code here:
+        Connection conexao = Banco.abrirConexao();
+        try {
+            int posicao = tabela.getSelectedRow();
+            int id = (int) tabela.getValueAt(posicao, 0);
+            PreparedStatement comando = conexao.prepareStatement("update estado set nome = ?, sigla = ? where id ="+id);
+            comando.setString(1, campoNome.getText());
+            comando.setString(2, campoSigla.getText());
+            comando.executeUpdate();
+            comando.close();
+            conexao.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex);
+        }
+        montaTabela();
+        limpaCampos();
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
@@ -187,11 +206,11 @@ public class CadastroEstado extends javax.swing.JFrame {
                 + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
         if (i == JOptionPane.YES_OPTION) {
-            int indice = tabela.getSelectedRow();
-            System.out.println(indice);
+            int posicao = tabela.getSelectedRow();
+            int id =  (int) tabela.getValueAt(posicao,0);
             try {
                 Connection conn = Banco.abrirConexao();
-                PreparedStatement ps = conn.prepareStatement("delete from estado where id=" + indice);
+                PreparedStatement ps = conn.prepareStatement("delete from estado where id=" + id);
                 ps.executeUpdate();
                 conn.close();
             } catch (SQLException ex) {
@@ -206,6 +225,7 @@ public class CadastroEstado extends javax.swing.JFrame {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("Código");
         modelo.addColumn("Estado");
+        modelo.addColumn("Sigla");
 
         try {
             String parte = campoConsultar.getText();
@@ -214,7 +234,7 @@ public class CadastroEstado extends javax.swing.JFrame {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
+                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome"), rs.getString("sigla")});
             }
             tabela.setModel(modelo);
             conn.close();
@@ -223,10 +243,26 @@ public class CadastroEstado extends javax.swing.JFrame {
             Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botaoConsultarActionPerformed
+
+    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        Connection conn = Banco.abrirConexao();
+        PreparedStatement ps;
+        int posicao = tabela.getSelectedRow();
+        String nome = (String) tabela.getValueAt(posicao, 1);
+        String sigla = (String) tabela.getValueAt(posicao, 2);
+        campoNome.setText(nome);
+        campoSigla.setText(sigla);
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tabelaMouseClicked
     public void montaTabela() {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("Código");
         modelo.addColumn("Estado");
+        modelo.addColumn("Sigla");
 
         try {
             Connection conn = Banco.abrirConexao();
@@ -234,7 +270,7 @@ public class CadastroEstado extends javax.swing.JFrame {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
+                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome"), rs.getString("sigla")});
             }
             tabela.setModel(modelo);
             conn.close();
