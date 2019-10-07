@@ -29,7 +29,7 @@ public class CadastroCidade extends javax.swing.JFrame {
         initComponents();
         preencherComboEstados();
         montaTabela();
-        //atualizarListaCidades();
+        validaTela("inicio");
     }
 
     /**
@@ -52,6 +52,8 @@ public class CadastroCidade extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
         campoConsultar = new javax.swing.JTextField();
+        botaoCancelar = new javax.swing.JButton();
+        botaoLimpar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,6 +107,20 @@ public class CadastroCidade extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tabela);
 
+        botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
+
+        botaoLimpar.setText("Limpar Consulta");
+        botaoLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLimparActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,21 +139,25 @@ public class CadastroCidade extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(comboEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(botaoIncluir)
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(botaoIncluir)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoAlterar)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoExcluir)))
                         .addGap(18, 18, 18)
-                        .addComponent(botaoAlterar)
-                        .addGap(18, 18, 18)
-                        .addComponent(botaoExcluir)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(botaoCancelar)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(botaoConsultar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoLimpar)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(botaoConsultar)
-                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,11 +174,13 @@ public class CadastroCidade extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botaoAlterar)
                     .addComponent(botaoExcluir)
-                    .addComponent(botaoIncluir))
+                    .addComponent(botaoIncluir)
+                    .addComponent(botaoCancelar))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botaoConsultar)
-                    .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoLimpar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(33, Short.MAX_VALUE))
@@ -182,23 +204,28 @@ public class CadastroCidade extends javax.swing.JFrame {
             }
             montaTabela();
             limpaCampos();
+            validaTela("inicio");
         }
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
 
-//        Connection conexao = Banco.abrirConexao();
-//        try {
-//            PreparedStatement comando = conexao.prepareStatement("update cidade set nome = ?, idestado = ? where id =");
-//            comando.setString(1, campoNome.getText());
-//            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
-//            comando.executeUpdate();
-//            comando.close();
-//            conexao.close();
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(rootPane, ex);
-//        }
-//        montaTabela();
+        Connection conexao = Banco.abrirConexao();
+        try {
+            int posicao = tabela.getSelectedRow();
+            int id = (int) tabela.getValueAt(posicao, 0);
+            PreparedStatement comando = conexao.prepareStatement("update cidade set nome = ?, idestado = ? where id =" + id);
+            comando.setString(1, campoNome.getText());
+            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
+            comando.executeUpdate();
+            comando.close();
+            conexao.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex);
+        }
+        montaTabela();
+        limpaCampos();
+        validaTela("inicio");
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
@@ -229,36 +256,39 @@ public class CadastroCidade extends javax.swing.JFrame {
                 + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
         if (i == JOptionPane.YES_OPTION) {
-            int indice = tabela.getSelectedRow();
+            int posicao = tabela.getSelectedRow();
+            int id = (int) tabela.getValueAt(posicao, 0);
             try {
                 Connection conn = Banco.abrirConexao();
-                PreparedStatement ps = conn.prepareStatement("delete from cidade where id=" + indice);
+                PreparedStatement ps = conn.prepareStatement("delete from cidade where id=" + id);
                 ps.executeUpdate();
                 conn.close();
             } catch (SQLException ex) {
                 Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
             }
             montaTabela();
+            limpaCampos();
+            validaTela("inicio");
 
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps;
-            int indice = tabela.getSelectedRow();
-            ps = conn.prepareStatement("select * from cidade where id=" + indice);
-
-            ResultSet rs = ps.executeQuery();
-
-            campoNome.setText(rs.getString("nome"));
-            //comboEstado.addItem(rs.getString("estado"));
-        } catch (SQLException ex) {
-            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        int posicao = tabela.getSelectedRow();
+        String nome = (String) tabela.getValueAt(posicao, 1);
+        campoNome.setText(nome);
+        validaTela("selecionar");
     }//GEN-LAST:event_tabelaMouseClicked
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+        limpaCampos();
+        validaTela("inicio");
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void botaoLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLimparActionPerformed
+        montaTabela();
+        campoConsultar.setText("");
+    }//GEN-LAST:event_botaoLimparActionPerformed
 
     public void montaTabela() {
         DefaultTableModel modelo = new DefaultTableModel();
@@ -318,9 +348,11 @@ public class CadastroCidade extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAlterar;
+    private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoConsultar;
     private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoIncluir;
+    private javax.swing.JButton botaoLimpar;
     private javax.swing.JTextField campoConsultar;
     private javax.swing.JTextField campoNome;
     private javax.swing.JComboBox<String> comboEstado;
@@ -370,5 +402,19 @@ public class CadastroCidade extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, mensagem);
         }
         return retorno;
+    }
+
+    private void validaTela(String acao) {
+        if (acao.equals("inicio")) {
+            botaoAlterar.setEnabled(false);
+            botaoExcluir.setEnabled(false);
+            botaoCancelar.setEnabled(false);
+            botaoIncluir.setEnabled(true);
+        } else if (acao.equals("selecionar")) {
+            botaoAlterar.setEnabled(true);
+            botaoExcluir.setEnabled(true);
+            botaoCancelar.setEnabled(true);
+            botaoIncluir.setEnabled(false);
+        }
     }
 }
