@@ -5,16 +5,20 @@
  */
 package crud.visao;
 
+import crud.entidades.Cidade;
+import crud.entidades.Estado;
 import crud.modelo.Banco;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Query;
 
 /**
  *
@@ -22,14 +26,20 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CadastroCidade extends javax.swing.JFrame {
 
+    private Cidade cid = new Cidade();
+    private List<Cidade> listaCidades = new ArrayList<Cidade>();
+    //Lista de estados para montar a combo.
+    private List<Estado> listaEstados = new ArrayList<Estado>();
+
     /**
      * Creates new form CadastroCidade
      */
     public CadastroCidade() {
         initComponents();
-        preencherComboEstados();
         montaTabela();
         validaTela("inicio");
+        montaCombo();
+        limpaCampos();
     }
 
     /**
@@ -191,17 +201,15 @@ public class CadastroCidade extends javax.swing.JFrame {
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
         if (validaCampos()) {
-            Connection conexao = Banco.abrirConexao();
-            try {
-                PreparedStatement comando = conexao.prepareStatement("insert into cidade (nome, idestado) values (?, ?)");
-                comando.setString(1, campoNome.getText());
-                comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
-                comando.executeUpdate();
-                comando.close();
-                conexao.close();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(rootPane, ex);
-            }
+
+            cid.setNome(campoNome.getText());
+            cid.setEstado(listaEstados.get(comboEstado.getSelectedIndex()));
+
+            Banco.beginTransaction();
+            Banco.getSession().merge(cid);
+            Banco.commitTransaction();
+            Banco.closeSession();
+
             montaTabela();
             limpaCampos();
             validaTela("inicio");
@@ -210,73 +218,57 @@ public class CadastroCidade extends javax.swing.JFrame {
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
 
-        Connection conexao = Banco.abrirConexao();
-        try {
-            int posicao = tabela.getSelectedRow();
-            int id = (int) tabela.getValueAt(posicao, 0);
-            PreparedStatement comando = conexao.prepareStatement("update cidade set nome = ?, idestado = ? where id =" + id);
-            comando.setString(1, campoNome.getText());
-            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
-            comando.executeUpdate();
-            comando.close();
-            conexao.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
+        if (validaCampos()) {
+
+            cid.setNome(campoNome.getText());
+            cid.setEstado(listaEstados.get(comboEstado.getSelectedIndex()));
+
+            Banco.beginTransaction();
+            Banco.getSession().merge(cid);
+            Banco.commitTransaction();
+            Banco.closeSession();
+
+            montaTabela();
+            limpaCampos();
+            validaTela("inicio");
         }
-        montaTabela();
-        limpaCampos();
-        validaTela("inicio");
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
+        String parte = campoConsultar.getText();
+        Query q = Banco.getSession().createQuery("FROM Cidade where nome like '%" + parte + "%'");
+        List<Cidade> results = q.list();
+        System.out.println(results);
+
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("Código");
-        modelo.addColumn("Cidade");
-
-        try {
-            String parte = campoConsultar.getText();
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade where nome like '%" + parte + "%'");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
-            }
-            tabela.setModel(modelo);
-            conn.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        modelo.addColumn("Nome");
+        modelo.addColumn("Nome Estado");
+        for (Cidade c : results) {
+            modelo.addRow(new Object[]{c.getNome(), c.getEstado().getNome()});
         }
+        tabela.setModel(modelo);
     }//GEN-LAST:event_botaoConsultarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
         Object[] opcoes = {"Sim", "Não"};
         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir "
-                + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
+                + "cide registro?", "Atenção", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
         if (i == JOptionPane.YES_OPTION) {
-            int posicao = tabela.getSelectedRow();
-            int id = (int) tabela.getValueAt(posicao, 0);
-            try {
-                Connection conn = Banco.abrirConexao();
-                PreparedStatement ps = conn.prepareStatement("delete from cidade where id=" + id);
-                ps.executeUpdate();
-                conn.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            montaTabela();
+            Banco.beginTransaction();
+            Banco.getSession().delete(cid);
+            Banco.commitTransaction();
+            Banco.closeSession();
             limpaCampos();
+            montaTabela();
             validaTela("inicio");
-
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
-        int posicao = tabela.getSelectedRow();
-        String nome = (String) tabela.getValueAt(posicao, 1);
-        campoNome.setText(nome);
+        cid = listaCidades.get(tabela.getSelectedRow());
+        campoNome.setText(cid.getNome());
+        comboEstado.setSelectedItem(cid.getEstado().getNome());
         validaTela("selecionar");
     }//GEN-LAST:event_tabelaMouseClicked
 
@@ -291,24 +283,15 @@ public class CadastroCidade extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoLimparActionPerformed
 
     public void montaTabela() {
+        listaCidades = Banco.getSession().
+                createCriteria(Cidade.class).list();
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("Código");
-        modelo.addColumn("Cidade");
-
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome")});
-            }
-            tabela.setModel(modelo);
-            conn.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        modelo.addColumn("Nome");
+        modelo.addColumn("Nome Estado");
+        for (Cidade c : listaCidades) {
+            modelo.addRow(new Object[]{c.getNome(), c.getEstado().getNome()});
         }
+        tabela.setModel(modelo);
     }
 
     /**
@@ -362,24 +345,12 @@ public class CadastroCidade extends javax.swing.JFrame {
     private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables
 
-    ArrayList<Integer> idEstados = new ArrayList<>();
-
-    private void preencherComboEstados() {
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                idEstados.add(rs.getInt("id"));
-                comboEstado.addItem(rs.getString("nome"));
-            }
-
-            ps.close();
-            conn.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void montaCombo() {
+        //Busca todos os estados do banco de dados.
+        listaEstados = Banco.getSession().createCriteria(Estado.class).list();
+        comboEstado.removeAllItems();
+        for (Estado e : listaEstados) {
+            comboEstado.addItem(e.getNome());
         }
     }
 

@@ -5,21 +5,30 @@
  */
 package crud.visao;
 
+import crud.entidades.Estado;
 import crud.modelo.Banco;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Query;
 
 /**
  *
  * @author Willian
  */
 public class CadastroEstado extends javax.swing.JFrame {
+
+    private Estado est = new Estado();
+    private List<Estado> listaEstados = new ArrayList<Estado>();
+    private EntityManager em;
 
     /**
      * Creates new form CadastroEstado
@@ -188,95 +197,69 @@ public class CadastroEstado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
-        if (validaCampos()) {
-            Connection conexao = Banco.abrirConexao();
-            try {
-                PreparedStatement comando = conexao.prepareStatement("insert into estado (sigla, nome) values (?, ?)");
-                comando.setString(1, campoSigla.getText());
-                comando.setString(2, campoNome.getText());
-                comando.executeUpdate();
-                comando.close();
-                conexao.close();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(rootPane, ex);
-            }
-            montaTabela();
-            limpaCampos();
-            validaTela("inicio");
-        }
+        est.setId(null);
+        est.setNome(campoNome.getText());
+        est.setSigla(campoSigla.getText());
+
+        Banco.beginTransaction();
+        Banco.getSession().persist(est);
+        Banco.commitTransaction();
+        Banco.closeSession();
+
+        montaTabela();
+        validaTela("inicio");
+
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
-        Connection conexao = Banco.abrirConexao();
-        try {
-            int posicao = tabela.getSelectedRow();
-            int id = (int) tabela.getValueAt(posicao, 0);
-            PreparedStatement comando = conexao.prepareStatement("update estado set nome = ?, sigla = ? where id ="+id);
-            comando.setString(1, campoNome.getText());
-            comando.setString(2, campoSigla.getText());
-            comando.executeUpdate();
-            comando.close();
-            conexao.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
-        }
+        est.setNome(campoNome.getText());
+        est.setSigla(campoSigla.getText());
+
+        Banco.beginTransaction();
+        Banco.getSession().merge(est);
+        Banco.commitTransaction();
+        Banco.closeSession();
+
         montaTabela();
         limpaCampos();
         validaTela("inicio");
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
-        Object[] opcoes = {"Sim", "Não"};
+       Object[] opcoes = {"Sim", "Não"};
         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir "
-                + "este registro?", "Atenção", JOptionPane.YES_NO_OPTION,
+                + "cide registro?", "Atenção", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
         if (i == JOptionPane.YES_OPTION) {
-            int posicao = tabela.getSelectedRow();
-            int id =  (int) tabela.getValueAt(posicao,0);
-            try {
-                Connection conn = Banco.abrirConexao();
-                PreparedStatement ps = conn.prepareStatement("delete from estado where id=" + id);
-                ps.executeUpdate();
-                conn.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            montaTabela();
+            Banco.beginTransaction();
+            Banco.getSession().delete(est);
+            Banco.commitTransaction();
+            Banco.closeSession();
             limpaCampos();
+            montaTabela();
             validaTela("inicio");
-
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
+        String parte = campoConsultar.getText();
+        Query q = Banco.getSession().createQuery("FROM Estado where nome like '%" + parte + "%'");
+        List<Estado> results = q.list();
+        System.out.println(results);
+        
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("Código");
-        modelo.addColumn("Estado");
+        modelo.addColumn("Nome");
         modelo.addColumn("Sigla");
-
-        try {
-            String parte = campoConsultar.getText();
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado where nome like '%" + parte + "%'");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome"), rs.getString("sigla")});
-            }
-            tabela.setModel(modelo);
-            conn.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        for (Estado e : results) {
+            modelo.addRow(new Object[]{e.getNome(), e.getSigla()});
         }
+        tabela.setModel(modelo);
     }//GEN-LAST:event_botaoConsultarActionPerformed
 
     private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
-int posicao = tabela.getSelectedRow();
-        String nome = (String) tabela.getValueAt(posicao, 1);
-        String sigla = (String) tabela.getValueAt(posicao, 2);
-        campoNome.setText(nome);
-        campoSigla.setText(sigla);
+        est = listaEstados.get(tabela.getSelectedRow());
+        campoNome.setText(est.getNome());
+        campoSigla.setText(est.getSigla());
         validaTela("selecionar");
     }//GEN-LAST:event_tabelaMouseClicked
 
@@ -290,25 +273,15 @@ int posicao = tabela.getSelectedRow();
         validaTela("inicio");
     }//GEN-LAST:event_botaoCancelarActionPerformed
     public void montaTabela() {
+       listaEstados = Banco.getSession().
+                createCriteria(Estado.class).list();
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("Código");
-        modelo.addColumn("Estado");
+        modelo.addColumn("Nome");
         modelo.addColumn("Sigla");
-
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getInt("id"), rs.getString("nome"), rs.getString("sigla")});
-            }
-            tabela.setModel(modelo);
-            conn.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CadastroCidade.class.getName()).log(Level.SEVERE, null, ex);
+        for (Estado e : listaEstados) {
+            modelo.addRow(new Object[]{e.getNome(), e.getSigla()});
         }
+        tabela.setModel(modelo);
     }
 
     /**
@@ -383,7 +356,8 @@ int posicao = tabela.getSelectedRow();
         }
         return retorno;
     }
-     private void validaTela(String acao) {
+
+    private void validaTela(String acao) {
         if (acao.equals("inicio")) {
             botaoAlterar.setEnabled(false);
             botaoExcluir.setEnabled(false);

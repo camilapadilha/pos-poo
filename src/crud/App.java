@@ -18,18 +18,7 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException {
-         Connection conexao = Banco.abrirConexao();        
-        
-        Statement declaracao = conexao.createStatement();
-        declaracao.execute("CREATE TABLE if not exists ESTADO(ID INT NOT NULL IDENTITY, NOME VARCHAR(255) NOT NULL UNIQUE, SIGLA CHAR(2) NOT NULL UNIQUE, STATUS CHAR(1) DEFAULT 'A' NOT NULL);");
-        
-        declaracao.execute("CREATE TABLE if not exists CIDADE(ID INT NOT NULL IDENTITY, NOME VARCHAR(255) NOT NULL UNIQUE, IDESTADO INTEGER NOT NULL);");
-        
-        declaracao.execute("CREATE TABLE if not exists PESSOA(ID INT NOT NULL IDENTITY, NOME VARCHAR(255) NOT NULL UNIQUE, RG VARCHAR(255), "
-                + "CPF VARCHAR(255), IDCIDADE INTEGER, TELEFONE VARCHAR(20), ENDERECO VARCHAR(255), BAIRRO VARCHAR(255), NUMERO VARCHAR(255));");
-        //declaracao.execute("ALTER TABLE CIDADE ADD FOREIGN KEY (IDESTADO) REFERENCES ESTADO(ID)");
-        
-        conexao.close();
+         
         
          /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
