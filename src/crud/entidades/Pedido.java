@@ -30,7 +30,7 @@ public class Pedido implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataPedido;
+    private Date dataPedido = new Date();
     private Double total;
     private String descricao;
     @OneToMany(cascade = CascadeType.ALL,
@@ -41,6 +41,13 @@ public class Pedido implements Serializable {
     public Pedido(){
         itensPedido = new ArrayList<ItensPedido>();
     }
+    public double getTotalPedido() {
+        total = 0d;
+        for (ItensPedido ip : itensPedido) {
+            total += ip.getSubtotal();
+        }
+        return total;
+}
     public Long getId() {
         return id;
     }

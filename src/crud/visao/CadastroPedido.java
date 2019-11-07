@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,11 +41,17 @@ public class CadastroPedido extends javax.swing.JFrame {
      * Creates new form CadastroEstado
      */
     public CadastroPedido() {
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        String data = formatador.format(pedido.getDataPedido());
         initComponents();
         montaTabela();
         montaComboProduto();
         validaTela("inicio");
-        campoData.setText(new Date().toString());
+        campoData.setText(data);
+        campoData.setEnabled(false);
+        campoTotal.setEnabled(false);
+        limpaCampos();
+
     }
 
     /**
@@ -156,7 +163,7 @@ public class CadastroPedido extends javax.swing.JFrame {
                 .addComponent(botaoConsultar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botaoLimpar)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(194, Short.MAX_VALUE))
         );
         panelListagemPedidoLayout.setVerticalGroup(
             panelListagemPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,6 +185,11 @@ public class CadastroPedido extends javax.swing.JFrame {
         labelProduto.setText("Produto");
 
         comboProduto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboProduto.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboProdutoItemStateChanged(evt);
+            }
+        });
         comboProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboProdutoActionPerformed(evt);
@@ -258,6 +270,12 @@ public class CadastroPedido extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Cadastro de Pedido");
 
+        campoTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoTotalActionPerformed(evt);
+            }
+        });
+
         labelPreco.setText("Preço");
 
         javax.swing.GroupLayout panelCadastroPedidoLayout = new javax.swing.GroupLayout(panelCadastroPedido);
@@ -270,21 +288,17 @@ public class CadastroPedido extends javax.swing.JFrame {
                         .addGap(14, 14, 14)
                         .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
-                            .addComponent(labelDesc))
+                            .addComponent(labelDesc)
+                            .addComponent(labelTotal))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(campoDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(campoData, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(campoData, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                    .addComponent(labelTotal)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel3))
                             .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
                                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
@@ -312,7 +326,8 @@ public class CadastroPedido extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(labelPreco)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))
                                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(campoProd, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
@@ -346,9 +361,9 @@ public class CadastroPedido extends javax.swing.JFrame {
                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelTotal))
-                .addGap(11, 11, 11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
-                .addGap(18, 18, 18)
+                .addGap(17, 17, 17)
                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelProduto)
                     .addComponent(comboProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -358,11 +373,9 @@ public class CadastroPedido extends javax.swing.JFrame {
                     .addComponent(labelPreco)
                     .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(90, Short.MAX_VALUE))
         );
-
-        jLabel1.getAccessibleContext().setAccessibleName("Cadastro de Pedido");
 
         jTabbedPane1.addTab("Cadastro de Pedido", panelCadastroPedido);
 
@@ -371,9 +384,8 @@ public class CadastroPedido extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,10 +400,10 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
         if (validaCampos()) {
-
+            
             pedido.setDescricao(campoDesc.getText());
-            pedido.setDataPedido(new Date());
-            pedido.setTotal(Double.parseDouble(campoTotal.getText()));
+            pedido.setDataPedido(new Date());          
+            itensPedido.setPreco(Double.parseDouble(campoPreco.getText()));
 
             Banco.beginTransaction();
             Banco.getSession().merge(pedido);
@@ -441,15 +453,18 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
         String parte = campoConsultar.getText();
-        Query q = Banco.getSession().createQuery("FROM Estado where nome like '%" + parte + "%'");
-        List<Estado> results = q.list();
+        Query q = Banco.getSession().createQuery("FROM Pedido where nome like '%" + parte + "%'");
+        List<Pedido> results = q.list();
         System.out.println(results);
 
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("Nome");
-        modelo.addColumn("Sigla");
-        for (Estado e : results) {
-            modelo.addRow(new Object[]{e.getNome(), e.getSigla()});
+        modelo.addColumn("Data");
+        modelo.addColumn("Descrição");
+        modelo.addColumn("Total");
+        for (Pedido p : results) {
+            modelo.addRow(new Object[]{p.getDataPedido(),
+                p.getDescricao(), 
+                p.getTotalPedido()});
         }
         tabelaListagemPedido.setModel(modelo);
     }//GEN-LAST:event_botaoConsultarActionPerformed
@@ -490,10 +505,9 @@ public class CadastroPedido extends javax.swing.JFrame {
         System.out.println(itensPedido);
         pedido.getItensPedido().add(itensPedido);
         System.out.println("entrou5");
-        
 
         montaTabelaItensPedido();
-        campoTotal.setText("Total: R$ " + pedido.getTotal());
+        campoTotal.setText("Total: R$ " + pedido.getTotalPedido());
         limpaCamposItens();
     }//GEN-LAST:event_botaoAdicionarActionPerformed
 
@@ -501,9 +515,21 @@ public class CadastroPedido extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoQuantidadeActionPerformed
 
+    private void campoTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoTotalActionPerformed
+
+    private void comboProdutoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboProdutoItemStateChanged
+        Object item = comboProduto.getSelectedObjects();
+        
+        System.out.println(item);
+        System.out.println("olaaa 2222");
+    }//GEN-LAST:event_comboProdutoItemStateChanged
+
     private void limpaCamposItens() {
         campoQuantidade.setText("");
         comboProduto.setSelectedItem(null);
+        campoPreco.setText("");
     }
     //Monta tabela dos itens da venda
 
@@ -530,10 +556,13 @@ public class CadastroPedido extends javax.swing.JFrame {
         listaPedidos = Banco.getSession().
                 createCriteria(Pedido.class).list();
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("Nome");
-        modelo.addColumn("Sigla");
+        modelo.addColumn("Data");
+        modelo.addColumn("Descrição");
+        modelo.addColumn("Total");
         for (Pedido p : listaPedidos) {
-            modelo.addRow(new Object[]{p.getDescricao()});
+            modelo.addRow(new Object[]{p.getDataPedido(), 
+                p.getDescricao(),
+            p.getTotal()});
         }
         tabelaListagemPedido.setModel(modelo);
     }

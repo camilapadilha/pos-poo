@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Luiz/Desktop/pos-poo/src/crud/entidades/Produto.java</file>
-            <file>file:/C:/Users/Luiz/Desktop/pos-poo/src/crud/visao/CadastroPedido.java</file>
-            <file>file:/C:/Users/Luiz/Desktop/pos-poo/src/crud/visao/CadastroProduto.java</file>
-            <file>file:/C:/Users/Luiz/Desktop/pos-poo/src/crud/entidades/ItensPedido.java</file>
-            <file>file:/C:/Users/Luiz/Desktop/pos-poo/src/crud/entidades/Pedido.java</file>
-            <file>file:/C:/Users/Luiz/Desktop/pos-poo/src/crud/App.java</file>
+            <file>file:/home/aluno/Área%20de%20Trabalho/pos-poo/src/crud/visao/CadastroEstado.java</file>
+            <file>file:/home/aluno/Área%20de%20Trabalho/pos-poo/src/crud/visao/CadastroPedido.java</file>
+            <file>file:/home/aluno/Área%20de%20Trabalho/pos-poo/src/crud/visao/CadastroCidade.java</file>
         </group>
     </open-files>
 </project-private>

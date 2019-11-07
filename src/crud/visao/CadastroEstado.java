@@ -208,6 +208,7 @@ public class CadastroEstado extends javax.swing.JFrame {
 
         montaTabela();
         validaTela("inicio");
+        limpaCampos();
 
     }//GEN-LAST:event_botaoIncluirActionPerformed
 

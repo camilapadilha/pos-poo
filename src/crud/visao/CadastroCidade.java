@@ -71,6 +71,12 @@ public class CadastroCidade extends javax.swing.JFrame {
 
         jLabel2.setText("Estado:");
 
+        comboEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboEstadoActionPerformed(evt);
+            }
+        });
+
         botaoIncluir.setText("Incluir");
         botaoIncluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -281,6 +287,10 @@ public class CadastroCidade extends javax.swing.JFrame {
         montaTabela();
         campoConsultar.setText("");
     }//GEN-LAST:event_botaoLimparActionPerformed
+
+    private void comboEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboEstadoActionPerformed
 
     public void montaTabela() {
         listaCidades = Banco.getSession().

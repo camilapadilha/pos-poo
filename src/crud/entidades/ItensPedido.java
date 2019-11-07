@@ -29,8 +29,17 @@ public class ItensPedido implements Serializable {
     private Produto produto;
     @ManyToOne
     private Pedido pedido;
+
+    public Double getSubtotal() {
+        return preco * quantidade;
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Double getPreco() {
@@ -39,10 +48,6 @@ public class ItensPedido implements Serializable {
 
     public void setPreco(Double preco) {
         this.preco = preco;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Produto getProduto() {
@@ -68,7 +73,7 @@ public class ItensPedido implements Serializable {
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -93,5 +98,5 @@ public class ItensPedido implements Serializable {
     public String toString() {
         return "crud.entidades.ItensPedido[ id=" + id + " ]";
     }
-    
+
 }
