@@ -36,20 +36,22 @@ public class CadastroPedido extends javax.swing.JFrame {
     private ItensPedido itensPedido = new ItensPedido();
     private List<Pedido> listaPedidos = new ArrayList<Pedido>();
     private List<Produto> listaProdutos = new ArrayList<Produto>();
+    SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * Creates new form CadastroEstado
      */
     public CadastroPedido() {
-        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         String data = formatador.format(pedido.getDataPedido());
         initComponents();
         montaTabela();
         montaComboProduto();
+        comboProduto.setSelectedItem(null);
         validaTela("inicio");
         campoData.setText(data);
         campoData.setEnabled(false);
         campoTotal.setEnabled(false);
+        campoPreco.setEnabled(false);
         limpaCampos();
 
     }
@@ -400,10 +402,12 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
         if (validaCampos()) {
-            
+
+//            for (Pedido listaPedido : listaPedidos) {
+//                
+//            }
             pedido.setDescricao(campoDesc.getText());
-            pedido.setDataPedido(new Date());          
-            itensPedido.setPreco(Double.parseDouble(campoPreco.getText()));
+            pedido.setDataPedido(new Date());
 
             Banco.beginTransaction();
             Banco.getSession().merge(pedido);
@@ -419,8 +423,8 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
         if (validaCampos()) {
-
             pedido.setDescricao(campoDesc.getText());
+            System.out.println("crud.visao.CadastroPedido.botaoAlterarActionPerformed()");
             pedido.setDataPedido(new Date());
             pedido.setTotal(Double.parseDouble(campoTotal.getText()));
 
@@ -463,7 +467,7 @@ public class CadastroPedido extends javax.swing.JFrame {
         modelo.addColumn("Total");
         for (Pedido p : results) {
             modelo.addRow(new Object[]{p.getDataPedido(),
-                p.getDescricao(), 
+                p.getDescricao(),
                 p.getTotalPedido()});
         }
         tabelaListagemPedido.setModel(modelo);
@@ -488,26 +492,20 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_comboProdutoActionPerformed
 
     private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
-        System.out.println("entrou");
-        itensPedido = new ItensPedido();
 //Recupera um produto da lista de produtos pela index da cambo selecionada, seta o produto no abtributo produto do objeto itensVenda.
+        System.out.println("test" + comboProduto.getSelectedIndex());
         itensPedido.setProduto(listaProdutos.get(comboProduto.getSelectedIndex()));
-        System.out.println(itensPedido.getProduto());
 //seta no atributo quantidade do objeto itensVenda a quantidade digitada na tela, convertendo de String para double.
         itensPedido.setQuantidade(Integer.parseInt(campoQuantidade.getText()));
         //seta no atributo valor do objeto itensVenda o valor do produto selecionado na cambo.
         itensPedido.setPreco(itensPedido.getProduto().getPreco());
         //seta o objeto venda no itensVenda;
-        System.out.println("entro3");
         itensPedido.setPedido(pedido);
         //Adicionar o objeto itensVenda na lista de itensvendas que existe dentro do objeto venda.
-        System.out.println("entrou4");
-        System.out.println(itensPedido);
         pedido.getItensPedido().add(itensPedido);
-        System.out.println("entrou5");
-
         montaTabelaItensPedido();
         campoTotal.setText("Total: R$ " + pedido.getTotalPedido());
+        itensPedido = new ItensPedido();
         limpaCamposItens();
     }//GEN-LAST:event_botaoAdicionarActionPerformed
 
@@ -520,10 +518,10 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_campoTotalActionPerformed
 
     private void comboProdutoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboProdutoItemStateChanged
-        Object item = comboProduto.getSelectedObjects();
-        
-        System.out.println(item);
-        System.out.println("olaaa 2222");
+//        Produto p = listaProdutos.get(comboProduto.getSelectedIndex());
+      System.out.println("teste preco" + evt.getStateChange());
+      System.out.println("teste preco 1" + evt.getItemSelectable());
+      System.out.println("teste preco 2" + evt.getClass());
     }//GEN-LAST:event_comboProdutoItemStateChanged
 
     private void limpaCamposItens() {
@@ -560,9 +558,9 @@ public class CadastroPedido extends javax.swing.JFrame {
         modelo.addColumn("Descrição");
         modelo.addColumn("Total");
         for (Pedido p : listaPedidos) {
-            modelo.addRow(new Object[]{p.getDataPedido(), 
+            modelo.addRow(new Object[]{formatador.format(p.getDataPedido()),
                 p.getDescricao(),
-            p.getTotal()});
+                p.getTotal()});
         }
         tabelaListagemPedido.setModel(modelo);
     }
