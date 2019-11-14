@@ -67,7 +67,7 @@ public class CadastroPedido extends javax.swing.JFrame {
 
         jMenu1 = new javax.swing.JMenu();
         jFrame1 = new javax.swing.JFrame();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        painel = new javax.swing.JTabbedPane();
         panelListagemPedido = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaListagemPedido = new javax.swing.JTable();
@@ -91,13 +91,13 @@ public class CadastroPedido extends javax.swing.JFrame {
         labelTotal = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         botaoIncluir = new javax.swing.JButton();
-        botaoAlterar = new javax.swing.JButton();
-        botaoExcluir = new javax.swing.JButton();
-        botaoCancelar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         campoTotal = new javax.swing.JTextField();
         labelPreco = new javax.swing.JLabel();
         campoPreco = new javax.swing.JTextField();
+        botaoAlterar = new javax.swing.JButton();
+        botaoExcluir = new javax.swing.JButton();
+        botaoCancelar = new javax.swing.JButton();
 
         jMenu1.setText("jMenu1");
 
@@ -125,6 +125,11 @@ public class CadastroPedido extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabelaListagemPedido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaListagemPedidoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaListagemPedido);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -152,37 +157,38 @@ public class CadastroPedido extends javax.swing.JFrame {
                 .addGroup(panelListagemPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelListagemPedidoLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1))
+                        .addGroup(panelListagemPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(panelListagemPedidoLayout.createSequentialGroup()
+                                .addGap(61, 61, 61)
+                                .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoConsultar)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoLimpar)
+                                .addGap(0, 132, Short.MAX_VALUE))))
                     .addGroup(panelListagemPedidoLayout.createSequentialGroup()
-                        .addGap(220, 220, 220)
+                        .addGap(267, 267, 267)
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(panelListagemPedidoLayout.createSequentialGroup()
-                .addGap(73, 73, 73)
-                .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(botaoConsultar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botaoLimpar)
-                .addContainerGap(194, Short.MAX_VALUE))
         );
         panelListagemPedidoLayout.setVerticalGroup(
             panelListagemPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelListagemPedidoLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(72, 72, 72)
                 .addComponent(jLabel4)
-                .addGap(42, 42, 42)
+                .addGap(75, 75, 75)
                 .addGroup(panelListagemPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoConsultar)
                     .addComponent(botaoLimpar))
                 .addGap(48, 48, 48)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Listagem de Pedido", panelListagemPedido);
+        painel.addTab("Listagem de Pedido", panelListagemPedido);
 
         labelProduto.setText("Produto");
 
@@ -248,6 +254,17 @@ public class CadastroPedido extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setText("Cadastro de Pedido");
+
+        campoTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoTotalActionPerformed(evt);
+            }
+        });
+
+        labelPreco.setText("Preço");
+
         botaoAlterar.setText("Alterar");
         botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -269,17 +286,6 @@ public class CadastroPedido extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setText("Cadastro de Pedido");
-
-        campoTotal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoTotalActionPerformed(evt);
-            }
-        });
-
-        labelPreco.setText("Preço");
-
         javax.swing.GroupLayout panelCadastroPedidoLayout = new javax.swing.GroupLayout(panelCadastroPedido);
         panelCadastroPedido.setLayout(panelCadastroPedidoLayout);
         panelCadastroPedidoLayout.setHorizontalGroup(
@@ -287,54 +293,53 @@ public class CadastroPedido extends javax.swing.JFrame {
             .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(labelDesc)
-                            .addComponent(labelTotal))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(campoDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(campoData, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
+                        .addGap(159, 159, 159)
+                        .addComponent(botaoIncluir)
                         .addGap(18, 18, 18)
-                        .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(botaoAlterar)
+                        .addGap(18, 18, 18)
+                        .addComponent(botaoExcluir)
+                        .addGap(18, 18, 18)
+                        .addComponent(botaoCancelar)
+                        .addGap(96, 96, 96)
+                        .addComponent(campoProd, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2)
                             .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                        .addGap(146, 146, 146)
-                                        .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                                .addGap(83, 83, 83)
-                                                .addComponent(jLabel1))
-                                            .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                                .addComponent(botaoIncluir)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(botaoAlterar)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(botaoExcluir)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(botaoCancelar))))
-                                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                        .addComponent(labelProduto)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(comboProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(labelQuantidade)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(campoQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(labelPreco)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel3))
-                                .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(campoProd, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(botaoAdicionar)))))))
+                                .addComponent(labelProduto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(comboProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(labelQuantidade)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(campoQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(labelPreco)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoAdicionar))))
+                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
+                        .addGap(271, 271, 271)
+                        .addComponent(jLabel1))
+                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoData, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(labelDesc)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelCadastroPedidoLayout.setVerticalGroup(
@@ -343,29 +348,24 @@ public class CadastroPedido extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(campoProd, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelCadastroPedidoLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botaoIncluir)
-                            .addComponent(botaoAlterar)
-                            .addComponent(botaoExcluir)
-                            .addComponent(botaoCancelar))))
-                .addGap(31, 31, 31)
+                    .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botaoIncluir)
+                        .addComponent(botaoAlterar)
+                        .addComponent(botaoExcluir)
+                        .addComponent(botaoCancelar)))
+                .addGap(39, 39, 39)
+                .addComponent(jLabel1)
+                .addGap(40, 40, 40)
                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(campoData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campoData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelDesc)
-                    .addComponent(campoDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campoDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelTotal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addComponent(jLabel3)
-                .addGap(17, 17, 17)
+                .addGap(35, 35, 35)
                 .addGroup(panelCadastroPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelProduto)
                     .addComponent(comboProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -376,25 +376,25 @@ public class CadastroPedido extends javax.swing.JFrame {
                     .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(45, 45, 45))
         );
 
-        jTabbedPane1.addTab("Cadastro de Pedido", panelCadastroPedido);
+        painel.addTab("Cadastro de Pedido", panelCadastroPedido);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(painel, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
+                .addComponent(painel, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -422,6 +422,7 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
+        panelCadastroPedido.show();
         if (validaCampos()) {
             pedido.setDescricao(campoDesc.getText());
             System.out.println("crud.visao.CadastroPedido.botaoAlterarActionPerformed()");
@@ -518,11 +519,24 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_campoTotalActionPerformed
 
     private void comboProdutoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboProdutoItemStateChanged
-//        Produto p = listaProdutos.get(comboProduto.getSelectedIndex());
-      System.out.println("teste preco" + evt.getStateChange());
-      System.out.println("teste preco 1" + evt.getItemSelectable());
-      System.out.println("teste preco 2" + evt.getClass());
+        campoPreco.setText("");
+        int index = comboProduto.getSelectedIndex();
+        for (int i = 0; i < listaProdutos.size(); i++) {
+            if (i == index) {
+                Double valor = listaProdutos.get(i).getPreco();
+                campoPreco.setText(valor.toString());
+            }
+        }
     }//GEN-LAST:event_comboProdutoItemStateChanged
+
+    private void tabelaListagemPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaListagemPedidoMouseClicked
+        panelCadastroPedido.setFocusable(true);
+        pedido = listaPedidos.get(tabelaListagemPedido.getSelectedRow());
+        campoData.setText(formatador.format(pedido.getDataPedido().toString()));
+        campoDesc.setText(pedido.getDescricao());
+        campoTotal.setText(pedido.getTotal().toString());
+        validaTela("selecionar");
+    }//GEN-LAST:event_tabelaListagemPedidoMouseClicked
 
     private void limpaCamposItens() {
         campoQuantidade.setText("");
@@ -625,12 +639,12 @@ public class CadastroPedido extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelDesc;
     private javax.swing.JLabel labelPreco;
     private javax.swing.JLabel labelProduto;
     private javax.swing.JLabel labelQuantidade;
     private javax.swing.JLabel labelTotal;
+    private javax.swing.JTabbedPane painel;
     private javax.swing.JPanel panelCadastroPedido;
     private javax.swing.JPanel panelListagemPedido;
     private javax.swing.JTable tabelaItensPedido;
@@ -639,6 +653,8 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void limpaCampos() {
         campoDesc.setText("");
+        campoTotal.setText("");
+       ((DefaultTableModel) tabelaItensPedido.getModel()).setRowCount(0);
     }
 
     private Boolean validaCampos() {
