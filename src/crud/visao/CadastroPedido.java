@@ -10,6 +10,7 @@ import crud.entidades.ItensPedido;
 import crud.entidades.Pedido;
 import crud.entidades.Produto;
 import crud.modelo.Banco;
+import java.awt.ComponentOrientation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -403,9 +404,6 @@ public class CadastroPedido extends javax.swing.JFrame {
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
         if (validaCampos()) {
 
-//            for (Pedido listaPedido : listaPedidos) {
-//                
-//            }
             pedido.setDescricao(campoDesc.getText());
             pedido.setDataPedido(new Date());
 
@@ -422,7 +420,6 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
-        panelCadastroPedido.show();
         if (validaCampos()) {
             pedido.setDescricao(campoDesc.getText());
             System.out.println("crud.visao.CadastroPedido.botaoAlterarActionPerformed()");
@@ -458,7 +455,7 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
         String parte = campoConsultar.getText();
-        Query q = Banco.getSession().createQuery("FROM Pedido where nome like '%" + parte + "%'");
+        Query q = Banco.getSession().createQuery("FROM Pedido where descricao like '%" + parte + "%'");
         List<Pedido> results = q.list();
         System.out.println(results);
 
@@ -493,8 +490,8 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_comboProdutoActionPerformed
 
     private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
+        double total;
 //Recupera um produto da lista de produtos pela index da cambo selecionada, seta o produto no abtributo produto do objeto itensVenda.
-        System.out.println("test" + comboProduto.getSelectedIndex());
         itensPedido.setProduto(listaProdutos.get(comboProduto.getSelectedIndex()));
 //seta no atributo quantidade do objeto itensVenda a quantidade digitada na tela, convertendo de String para double.
         itensPedido.setQuantidade(Integer.parseInt(campoQuantidade.getText()));
@@ -505,7 +502,8 @@ public class CadastroPedido extends javax.swing.JFrame {
         //Adicionar o objeto itensVenda na lista de itensvendas que existe dentro do objeto venda.
         pedido.getItensPedido().add(itensPedido);
         montaTabelaItensPedido();
-        campoTotal.setText("Total: R$ " + pedido.getTotalPedido());
+        total = pedido.getTotalPedido();
+        campoTotal.setText("" + total);
         itensPedido = new ItensPedido();
         limpaCamposItens();
     }//GEN-LAST:event_botaoAdicionarActionPerformed
@@ -530,11 +528,14 @@ public class CadastroPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_comboProdutoItemStateChanged
 
     private void tabelaListagemPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaListagemPedidoMouseClicked
-        panelCadastroPedido.setFocusable(true);
+//        panelCadastroPedido.setFocusable(true);
+        String data = formatador.format(pedido.getDataPedido());
         pedido = listaPedidos.get(tabelaListagemPedido.getSelectedRow());
-        campoData.setText(formatador.format(pedido.getDataPedido().toString()));
+        campoData.setText(data);
         campoDesc.setText(pedido.getDescricao());
         campoTotal.setText(pedido.getTotal().toString());
+        montaTabelaItensPedido();
+
         validaTela("selecionar");
     }//GEN-LAST:event_tabelaListagemPedidoMouseClicked
 
@@ -654,7 +655,7 @@ public class CadastroPedido extends javax.swing.JFrame {
     private void limpaCampos() {
         campoDesc.setText("");
         campoTotal.setText("");
-       ((DefaultTableModel) tabelaItensPedido.getModel()).setRowCount(0);
+        ((DefaultTableModel) tabelaItensPedido.getModel()).setRowCount(0);
     }
 
     private Boolean validaCampos() {
